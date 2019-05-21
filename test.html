@@ -1,17 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html><head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Asteroids</title>
+    <style></style>
 </head>
+
 <body>
-<h1 style="color: red;">Je bent gebleven bij 40:30 in
-    deze video<a href="https://www.youtube.com/watch?v=
-H9CSWMxJx84&list=PL7i3ft8mCrphCJKg3XkDbvl_8w4ULNFTp&i
-ndex=4">astroids tutorial :)</a></h1>
-
-
-<canvas id="gameCanvas" width="700" height="500"></canvas>
+<canvas id="gameCanvas" width="760" height="570"></canvas>
 <script>
     const FPS = 30; // frames per second
     const FRICTION = 0.7; // friction coefficient of space (0 = no friction, 1 = lots of friction)
@@ -24,8 +18,6 @@ ndex=4">astroids tutorial :)</a></h1>
     const SHIP_THRUST = 5; // acceleration of the ship in pixels per second per second
     const SHIP_TURN_SPD = 360; // turn speed in degrees per second
     const SHOW_CENTRE_DOT = false; // show or hide ship's centre dot
-    const SHOW_BOUNDING = false; // show or hide ship's bounding
-    const SHIP_EXPLODE_DUR = 0.3; // duration of ship exploding
 
     /** @type {HTMLCanvasElement} */
     var canv = document.getElementById("gameCanvas");
@@ -37,14 +29,13 @@ ndex=4">astroids tutorial :)</a></h1>
         y: canv.height / 2,
         r: SHIP_SIZE / 2,
         a: 90 / 180 * Math.PI, // convert to radians
-        explodeTime: 0,
         rot: 0,
         thrusting: false,
         thrust: {
             x: 0,
             y: 0
         }
-    };
+    }
 
     // set up asteroids
     var roids = [];
@@ -74,12 +65,8 @@ ndex=4">astroids tutorial :)</a></h1>
         return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
-    function explodeShip() {
-        ship.explodeTime = Math.ceil(SHIP_EXPLODE_DUR * FPS);
-    }
-
     function keyDown(/** @type {KeyboardEvent} */ ev) {
-        switch (ev.keyCode) {
+        switch(ev.keyCode) {
             case 37: // left arrow (rotate ship left)
                 ship.rot = SHIP_TURN_SPD / 180 * Math.PI / FPS;
                 break;
@@ -93,7 +80,7 @@ ndex=4">astroids tutorial :)</a></h1>
     }
 
     function keyUp(/** @type {KeyboardEvent} */ ev) {
-        switch (ev.keyCode) {
+        switch(ev.keyCode) {
             case 37: // left arrow (stop rotating left)
                 ship.rot = 0;
                 break;
@@ -127,8 +114,6 @@ ndex=4">astroids tutorial :)</a></h1>
     }
 
     function update() {
-        var exploding = ship.explodeTime > 0;
-
         // draw space
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canv.width, canv.height);
@@ -165,7 +150,6 @@ ndex=4">astroids tutorial :)</a></h1>
         }
 
         // draw the triangular ship
-     if(!exploding){
         ctx.strokeStyle = "white";
         ctx.lineWidth = SHIP_SIZE / 20;
         ctx.beginPath();
@@ -183,42 +167,12 @@ ndex=4">astroids tutorial :)</a></h1>
         );
         ctx.closePath();
         ctx.stroke();
-    }else {
-         // draw the explosion
-         ctx.fillStyle = "darkred";
-         ctx.beginPath();
-         ctx.arc(ship.x, ship.y, ship.r * 1.7, 0, Math.PI * 2, false);
-         ctx.fill();
-         ctx.fillStyle = "red";
-         ctx.beginPath();
-         ctx.arc(ship.x, ship.y, ship.r * 1.4, 0, Math.PI * 2, false);
-         ctx.fill();
-         ctx.fillStyle = "orange";
-         ctx.beginPath();
-         ctx.arc(ship.x, ship.y, ship.r * 1.1, 0, Math.PI * 2, false);
-         ctx.fill();
-         ctx.fillStyle = "yellow";
-         ctx.beginPath();
-         ctx.arc(ship.x, ship.y, ship.r * 0.8, 0, Math.PI * 2, false);
-         ctx.fill();
-         ctx.fillStyle = "white";
-         ctx.beginPath();
-         ctx.arc(ship.x, ship.y, ship.r * 0.5, 0, Math.PI * 2, false);
-         ctx.fill();
-     }
-        if (SHOW_BOUNDING) {
-            ctx.strokeStyle = "lime";
-            ctx.beginPath();
-            ctx.arc(ship.x, ship.y, ship.r, 0, Math.PI * 2, false);
-            ctx.stroke();
-        }
 
         // draw the asteroids
+        ctx.strokeStyle = "slategrey";
+        ctx.lineWidth = SHIP_SIZE / 20;
         var a, r, x, y, offs, vert;
         for (var i = 0; i < roids.length; i++) {
-
-            ctx.strokeStyle = "slategrey";
-            ctx.lineWidth = SHIP_SIZE / 20;
 
             // get the asteroid properties
             a = roids[i].a;
@@ -245,11 +199,20 @@ ndex=4">astroids tutorial :)</a></h1>
             ctx.closePath();
             ctx.stroke();
 
-            if (SHOW_BOUNDING) {
-                ctx.strokeStyle = "lime";
-                ctx.beginPath();
-                ctx.arc(x, y, r, 0, Math.PI * 2, false);
-                ctx.stroke();
+            // move the asteroid
+            roids[i].x += roids[i].xv;
+            roids[i].y += roids[i].yv;
+
+            // handle asteroid edge of screen
+            if (roids[i].x < 0 - roids[i].r) {
+                roids[i].x = canv.width + roids[i].r;
+            } else if (roids[i].x > canv.width + roids[i].r) {
+                roids[i].x = 0 - roids[i].r
+            }
+            if (roids[i].y < 0 - roids[i].r) {
+                roids[i].y = canv.height + roids[i].r;
+            } else if (roids[i].y > canv.height + roids[i].r) {
+                roids[i].y = 0 - roids[i].r
             }
         }
 
@@ -257,13 +220,6 @@ ndex=4">astroids tutorial :)</a></h1>
         if (SHOW_CENTRE_DOT) {
             ctx.fillStyle = "red";
             ctx.fillRect(ship.x - 1, ship.y - 1, 2, 2);
-        }
-
-        // check for asteroid collisions
-        for (var i = 0; i < roids.length; i++) {
-            if (distBetweenPoints(ship.x, ship.y, roids[i].x, roids[i].y) < ship.r + roids[i].r) {
-                explodeShip();
-            }
         }
 
         // rotate the ship
@@ -284,25 +240,8 @@ ndex=4">astroids tutorial :)</a></h1>
         } else if (ship.y > canv.height + ship.r) {
             ship.y = 0 - ship.r;
         }
-        // move the asteroid
-        for (var i = 0; i < roids.length; i++) {
-            roids[i].x += roids[i].xv;
-            roids[i].y += roids[i].yv;
-
-            // handle asteroid edge of screen
-            if (roids[i].x < 0 - roids[i].r) {
-                roids[i].x = canv.width + roids[i].r;
-            } else if (roids[i].x > canv.width + roids[i].r) {
-                roids[i].x = 0 - roids[i].r
-            }
-            if (roids[i].y < 0 - roids[i].r) {
-                roids[i].y = canv.height + roids[i].r;
-            } else if (roids[i].y > canv.height + roids[i].r) {
-                roids[i].y = 0 - roids[i].r
-            }
-        }
     }
-
 </script>
-</body>
-</html>
+
+
+</body></html>
