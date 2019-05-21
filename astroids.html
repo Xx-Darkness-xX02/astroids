@@ -139,25 +139,27 @@ ndex=4">astroids tutorial :)</a></h1>
             ship.thrust.y -= SHIP_THRUST * Math.sin(ship.a) / FPS;
 
             // draw the thruster
-            ctx.fillStyle = "red";
-            ctx.strokeStyle = "yellow";
-            ctx.lineWidth = SHIP_SIZE / 10;
-            ctx.beginPath();
-            ctx.moveTo( // rear left
-                ship.x - ship.r * (2 / 3 * Math.cos(ship.a) + 0.5 * Math.sin(ship.a)),
-                ship.y + ship.r * (2 / 3 * Math.sin(ship.a) - 0.5 * Math.cos(ship.a))
-            );
-            ctx.lineTo( // rear centre (behind the ship)
-                ship.x - ship.r * 5 / 3 * Math.cos(ship.a),
-                ship.y + ship.r * 5 / 3 * Math.sin(ship.a)
-            );
-            ctx.lineTo( // rear right
-                ship.x - ship.r * (2 / 3 * Math.cos(ship.a) - 0.5 * Math.sin(ship.a)),
-                ship.y + ship.r * (2 / 3 * Math.sin(ship.a) + 0.5 * Math.cos(ship.a))
-            );
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
+            if (!exploding) {
+                ctx.fillStyle = "red";
+                ctx.strokeStyle = "yellow";
+                ctx.lineWidth = SHIP_SIZE / 10;
+                ctx.beginPath();
+                ctx.moveTo( // rear left
+                    ship.x - ship.r * (2 / 3 * Math.cos(ship.a) + 0.5 * Math.sin(ship.a)),
+                    ship.y + ship.r * (2 / 3 * Math.sin(ship.a) - 0.5 * Math.cos(ship.a))
+                );
+                ctx.lineTo( // rear centre (behind the ship)
+                    ship.x - ship.r * 5 / 3 * Math.cos(ship.a),
+                    ship.y + ship.r * 5 / 3 * Math.sin(ship.a)
+                );
+                ctx.lineTo( // rear right
+                    ship.x - ship.r * (2 / 3 * Math.cos(ship.a) - 0.5 * Math.sin(ship.a)),
+                    ship.y + ship.r * (2 / 3 * Math.sin(ship.a) + 0.5 * Math.cos(ship.a))
+                );
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            }
         } else {
             // apply friction (slow the ship down when not thrusting)
             ship.thrust.x -= FRICTION * ship.thrust.x / FPS;
@@ -165,47 +167,47 @@ ndex=4">astroids tutorial :)</a></h1>
         }
 
         // draw the triangular ship
-     if(!exploding){
-        ctx.strokeStyle = "white";
-        ctx.lineWidth = SHIP_SIZE / 20;
-        ctx.beginPath();
-        ctx.moveTo( // nose of the ship
-            ship.x + 4 / 3 * ship.r * Math.cos(ship.a),
-            ship.y - 4 / 3 * ship.r * Math.sin(ship.a)
-        );
-        ctx.lineTo( // rear left
-            ship.x - ship.r * (2 / 3 * Math.cos(ship.a) + Math.sin(ship.a)),
-            ship.y + ship.r * (2 / 3 * Math.sin(ship.a) - Math.cos(ship.a))
-        );
-        ctx.lineTo( // rear right
-            ship.x - ship.r * (2 / 3 * Math.cos(ship.a) - Math.sin(ship.a)),
-            ship.y + ship.r * (2 / 3 * Math.sin(ship.a) + Math.cos(ship.a))
-        );
-        ctx.closePath();
-        ctx.stroke();
-    }else {
-         // draw the explosion
-         ctx.fillStyle = "darkred";
-         ctx.beginPath();
-         ctx.arc(ship.x, ship.y, ship.r * 1.7, 0, Math.PI * 2, false);
-         ctx.fill();
-         ctx.fillStyle = "red";
-         ctx.beginPath();
-         ctx.arc(ship.x, ship.y, ship.r * 1.4, 0, Math.PI * 2, false);
-         ctx.fill();
-         ctx.fillStyle = "orange";
-         ctx.beginPath();
-         ctx.arc(ship.x, ship.y, ship.r * 1.1, 0, Math.PI * 2, false);
-         ctx.fill();
-         ctx.fillStyle = "yellow";
-         ctx.beginPath();
-         ctx.arc(ship.x, ship.y, ship.r * 0.8, 0, Math.PI * 2, false);
-         ctx.fill();
-         ctx.fillStyle = "white";
-         ctx.beginPath();
-         ctx.arc(ship.x, ship.y, ship.r * 0.5, 0, Math.PI * 2, false);
-         ctx.fill();
-     }
+        if (!exploding) {
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = SHIP_SIZE / 20;
+            ctx.beginPath();
+            ctx.moveTo( // nose of the ship
+                ship.x + 4 / 3 * ship.r * Math.cos(ship.a),
+                ship.y - 4 / 3 * ship.r * Math.sin(ship.a)
+            );
+            ctx.lineTo( // rear left
+                ship.x - ship.r * (2 / 3 * Math.cos(ship.a) + Math.sin(ship.a)),
+                ship.y + ship.r * (2 / 3 * Math.sin(ship.a) - Math.cos(ship.a))
+            );
+            ctx.lineTo( // rear right
+                ship.x - ship.r * (2 / 3 * Math.cos(ship.a) - Math.sin(ship.a)),
+                ship.y + ship.r * (2 / 3 * Math.sin(ship.a) + Math.cos(ship.a))
+            );
+            ctx.closePath();
+            ctx.stroke();
+        } else {
+            // draw the explosion
+            ctx.fillStyle = "darkred";
+            ctx.beginPath();
+            ctx.arc(ship.x, ship.y, ship.r * 1.7, 0, Math.PI * 2, false);
+            ctx.fill();
+            ctx.fillStyle = "red";
+            ctx.beginPath();
+            ctx.arc(ship.x, ship.y, ship.r * 1.4, 0, Math.PI * 2, false);
+            ctx.fill();
+            ctx.fillStyle = "orange";
+            ctx.beginPath();
+            ctx.arc(ship.x, ship.y, ship.r * 1.1, 0, Math.PI * 2, false);
+            ctx.fill();
+            ctx.fillStyle = "yellow";
+            ctx.beginPath();
+            ctx.arc(ship.x, ship.y, ship.r * 0.8, 0, Math.PI * 2, false);
+            ctx.fill();
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            ctx.arc(ship.x, ship.y, ship.r * 0.5, 0, Math.PI * 2, false);
+            ctx.fill();
+        }
         if (SHOW_BOUNDING) {
             ctx.strokeStyle = "lime";
             ctx.beginPath();
@@ -260,19 +262,20 @@ ndex=4">astroids tutorial :)</a></h1>
         }
 
         // check for asteroid collisions
-        for (var i = 0; i < roids.length; i++) {
-            if (distBetweenPoints(ship.x, ship.y, roids[i].x, roids[i].y) < ship.r + roids[i].r) {
-                explodeShip();
+        if (!exploding) {
+            for (var i = 0; i < roids.length; i++) {
+                if (distBetweenPoints(ship.x, ship.y, roids[i].x, roids[i].y) < ship.r + roids[i].r) {
+                    explodeShip();
+                }
             }
+
+            // rotate the ship
+            ship.a += ship.rot;
+
+            // move the ship
+            ship.x += ship.thrust.x;
+            ship.y += ship.thrust.y;
         }
-
-        // rotate the ship
-        ship.a += ship.rot;
-
-        // move the ship
-        ship.x += ship.thrust.x;
-        ship.y += ship.thrust.y;
-
         // handle edge of screen
         if (ship.x < 0 - ship.r) {
             ship.x = canv.width + ship.r;
